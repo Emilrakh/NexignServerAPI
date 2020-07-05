@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>server</groupId>
-	<artifactId>ServerAPI</artifactId>
+	<artifactId>NexignServerAPI</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ServerAPI</name>
+	<name>NexignServerAPI</name>
 	<description>Practice project </description>
 
 	<properties>
