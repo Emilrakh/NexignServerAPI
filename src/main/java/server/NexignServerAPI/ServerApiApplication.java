@@ -1,4 +1,4 @@
-package server.ServerAPI;
+package server.NexignServerAPI;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
