@@ -1,6 +1,9 @@
 package server.NexignServerAPI.model;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "Users")
@@ -15,8 +18,10 @@ public class User{
     private String email;
 
     private String status;
-//    @Column(name = "actionDate")
-//    private LocalDateTime actionDate;
+    @Basic
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date actionDate = new Date();
 
     public User() {
         super();
@@ -26,6 +31,14 @@ public class User{
         super();
         this.name = name;
         this.email = email;
+    }
+
+    public User(String name, String email, String status) {
+        super();
+        this.name = name;
+        this.email = email;
+        this.status = status;
+        this.actionDate = actionDate;
     }
 
     public void setUserID(long userID) {
@@ -44,9 +57,9 @@ public class User{
         this.status = status;
     }
 
-//    public void setActionDate(LocalDateTime actionDate) {
-//        this.actionDate = actionDate;
-//    }
+    public void setActionDate(java.util.Date actionDate) {
+        this.actionDate = actionDate;
+    }
 
     public long getUserID() {
         return userID;
@@ -64,9 +77,9 @@ public class User{
         return status;
     }
 
-//    public LocalDateTime getActionDate() {
-//        return actionDate;
-//    }
+    public java.util.Date getActionDate() {
+        return actionDate;
+    }
 
     @Override
     public String toString() {
