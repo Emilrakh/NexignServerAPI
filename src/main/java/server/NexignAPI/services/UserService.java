@@ -1,6 +1,6 @@
 package server.NexignAPI.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import server.NexignServerAPI.exception.ResourceNotFoundException;
 import server.NexignServerAPI.model.User;
@@ -11,7 +11,6 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Autowired
     private UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
