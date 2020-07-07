@@ -2,12 +2,11 @@ package server.NexignServerAPI.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.annotation.*;
 import org.springframework.web.bind.annotation.*;
+import server.NexignAPI.services.UserService;
 import server.NexignServerAPI.exception.ResourceNotFoundException;
 import server.NexignServerAPI.model.User;
-import server.NexignServerAPI.repository.UserRepository;
-
 
 import java.util.List;
 
@@ -16,37 +15,41 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/hello")
     public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
         return String.format("Hello %s!", name);
     }
 
-    @PostMapping("addUser")
-    public User addUser(@RequestBody User user) {
-        return this.userRepository.save(user);
+    @PutMapping("addUser")
+    public long addUser(@RequestParam("username") String name, @RequestParam("email") String email) {
+        return userService.addUser(name, email);
     }
 
     @GetMapping("/users")
     public List<User> getAllUsers(){
-        return this.userRepository.findAll();
+        return userService.getAllUsers();
     }
 
     @GetMapping("/users/{userID}")
     public ResponseEntity<User> getUserByID(@PathVariable(value = "userID") Long userID)
         throws ResourceNotFoundException {
-            User user = userRepository.findById(userID).orElseThrow(()-> new ResourceNotFoundException("Not user with this ID " + userID));
-                return ResponseEntity.ok().body(user);
+            User user = userService.getUserById(userID);
+        return ResponseEntity.ok().body(user);
     }
 
     @PostMapping("/users/{userID}")
     public ResponseEntity<User> addNewStatusByID(@PathVariable(value = "userID") Long userID, @Validated @RequestBody User userDetails )
             throws ResourceNotFoundException {
-        User user = userRepository.findById(userID).orElseThrow(()-> new ResourceNotFoundException("Not user with this ID " + userID));
+        User user = userService.addNewStatusByID(userID, userDetails);
         user.setStatus(userDetails.getStatus());
         user.setActionDate(userDetails.getActionDate());
 
-        return ResponseEntity.ok(this.userRepository.save(user));
+        return ResponseEntity.ok().body(user);
     }
 }
