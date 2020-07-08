@@ -2,12 +2,15 @@ package server.NexignServerAPI.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.*;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import server.NexignAPI.services.UserService;
+import server.NexignServerAPI.DTO.UserDTO;
+import server.NexignServerAPI.models.UserModel;
+import server.NexignServerAPI.services.UserService;
 import server.NexignServerAPI.exception.ResourceNotFoundException;
-import server.NexignServerAPI.model.User;
+import server.NexignServerAPI.entities.UserEntity;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -16,6 +19,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -25,30 +29,75 @@ public class UserController {
         return String.format("Hello %s!", name);
     }
 
-    @PutMapping("addUser")
-    public long addUser(@RequestParam("username") String name, @RequestParam("email") String email) {
-        return userService.addUser(name, email);
-    }
-
     @GetMapping("/users")
-    public List<User> getAllUsers(){
+    public List<UserEntity> getAllUsers(){
         return userService.getAllUsers();
     }
 
-    @GetMapping("/users/{userID}")
-    public ResponseEntity<User> getUserByID(@PathVariable(value = "userID") Long userID)
-        throws ResourceNotFoundException {
-            User user = userService.getUserById(userID);
-        return ResponseEntity.ok().body(user);
+    @PostMapping("addUser")
+    public UserEntity addUser(@RequestBody UserDTO userDTO) {
+        Long id = userDTO.getUserID();
+        String name = userDTO.getName();
+        String email = userDTO.getEmail();
+        UserModel userModel = new UserModel(id, name, email);
+        return userService.addUser(userModel);
     }
 
-    @PostMapping("/users/{userID}")
-    public ResponseEntity<User> addNewStatusByID(@PathVariable(value = "userID") Long userID, @Validated @RequestBody User userDetails )
-            throws ResourceNotFoundException {
-        User user = userService.addNewStatusByID(userID, userDetails);
-        user.setStatus(userDetails.getStatus());
-        user.setActionDate(userDetails.getActionDate());
+    @GetMapping("/users/{userID}")
+    public ResponseEntity<UserDTO> getUserByID(@PathVariable(value = "userID") Long userID)
+        throws ResourceNotFoundException {
+        UserModel userModel = this.userService.getUserById(userID);
+        Long id = userModel.getUserID();
+        String name = userModel.getName();
+        String email = userModel.getEmail();
+        String status = userModel.getStatus();
+        String oldStatus = userModel.getOldStatus();
+        UserDTO userDTO = new UserDTO(id, name, email, status, oldStatus);
+        return ResponseEntity.ok().body(userDTO);
+    }
 
-        return ResponseEntity.ok().body(user);
+//    @GetMapping("/users/{userID}")
+//    public List<UserEntity> findByID(Iterable<Long> userID) {
+//        return userService.findByID(userID);
+//    }
+
+//    @GetMapping("/users/{userID}")
+//    public UserEntity findByID(Long userID){
+//        return userService.findByID(userID);
+//    }
+
+//    @PutMapping("/users/{userID}")
+//    public ResponseEntity<UserDTO> addNewStatusByID(@RequestBody UserDTO userDTO, @PathVariable String userID)
+//            throws ResourceNotFoundException {
+//        Long id = userDTO.getUserID();
+//        String name = userDTO.getName();
+//        String email = userDTO.getEmail();
+//        String newStatus = userDTO.getStatus();
+//        String oldStatus = userDTO.getStatus();
+//        Date actionDate = new Date();
+//        UserModel userModel = this.userService.addNewStatusByID(id, newStatus);
+//        userDTO = new UserDTO(id, name, email, userModel.getStatus(), actionDate, oldStatus);
+//        return ResponseEntity.ok().body(userDTO);
+//    }
+
+    @PutMapping("/users/{userID}")
+    public ResponseEntity<UserEntity> addNewStatusByID(@PathVariable(value = "userID") Long userID, @Validated @RequestBody UserEntity userDetails)
+            throws ResourceNotFoundException {
+        UserModel userModel = userService.getUserById(userID);
+        userModel.setOldStatus(userDetails.getStatus());
+        userModel.setStatus(userDetails.getStatus());
+        userModel.setActionDate(new Date());
+        final UserEntity newUser = userService.addNewStatusByID(userID, userDetails);
+        return ResponseEntity.ok().body(newUser);
+    }
+
+    @GetMapping("/users/status/{status}")
+    public List<UserEntity> findByStatus(@PathVariable(value = "status") String status) {
+        return userService.findByStatus(status);
+    }
+
+    @GetMapping("/users/status/{status}/{actionDate}")
+    public List<UserEntity> findByStatusAndActionDate(@PathVariable(value = "status") String status,@PathVariable(value = "actionDate") Date actionDate) {
+        return userService.findByStatusAndActionDate(status, actionDate);
     }
 }

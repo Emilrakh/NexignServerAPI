@@ -1,4 +1,4 @@
-package server.NexignServerAPI.model;
+package server.NexignServerAPI.entities;
 
 import org.hibernate.annotations.CreationTimestamp;
 import lombok.AllArgsConstructor;
@@ -11,35 +11,47 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @Table(name = "Users")
-public class User{
+public class UserEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userID;
     private String name;
     private String email;
+    @Column(name = "status")
     private String status;
     @Basic
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date actionDate = new Date();
+    private String oldStatus;
 
-    public User(User user) {
-        super();
-    }
+    public UserEntity() {}
 
-    public User(String name, String email) {
+    public UserEntity(String name, String email) {
         super();
         this.name = name;
         this.email = email;
     }
 
-    public User(String name, String email, String status) {
+    public UserEntity(Long userID, String name, String email) {
+        super();
+        this.userID = userID;
+        this.name = name;
+        this.email = email;
+    }
+
+    public UserEntity(String name, String email, String status) {
         super();
         this.name = name;
         this.email = email;
         this.status = status;
         this.actionDate = actionDate;
+    }
+
+    public String setStatus(String status) {
+        this.status = status;
+        return status;
     }
 
     @Override
@@ -51,5 +63,4 @@ public class User{
                 ", status=" + status +
                 '}';
     }
-
 }
