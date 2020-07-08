@@ -98,7 +98,11 @@ public class UserController {
     }
 
     @GetMapping("/users/status/{status}/{actionDate}")
+<<<<<<< HEAD
     public List<UserEntity> findByStatusAndActionDate(@PathVariable(value = "status") String status,@PathVariable(value = "actionDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date actionDate) {
+=======
+    public List<UserEntity> findByStatusAndActionDate(@PathVariable(value = "status") String status,@PathVariable(value = "actionDate") Date actionDate) {
+>>>>>>> master
         return userService.findByStatusAndActionDate(status, actionDate);
     }
 }
