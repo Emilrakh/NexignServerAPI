@@ -14,10 +14,11 @@
       <ObjectId>16396</ObjectId>
       <StateNumber>530</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>537</IntrospectionStateNumber>
+      <IntrospectionStateNumber>604</IntrospectionStateNumber>
       <Current>1</Current>
       <Visible>1</Visible>
-      <Relations>sequence|table|16397|16399|1
+      <Relations>sequence|table|16417|16419|1
+sequence|table|16465|16467|1
 </Relations>
     </database>
     <role id="4" parent="1" name="emilrakh">
@@ -178,9 +179,17 @@
       <SchemaName>pg_catalog</SchemaName>
       <SchemaId>11</SchemaId>
     </extension>
-    <sequence id="28" parent="19" name="users_userid_seq">
-      <ObjectId>16397</ObjectId>
-      <StateNumber>533</StateNumber>
+    <sequence id="28" parent="19" name="historytable_ht_id_seq">
+      <ObjectId>16465</ObjectId>
+      <StateNumber>598</StateNumber>
+      <Owner>postgres</Owner>
+      <SequenceIdentity>1..2147483647</SequenceIdentity>
+      <CacheSize>1</CacheSize>
+      <DataType>integer</DataType>
+    </sequence>
+    <sequence id="29" parent="19" name="users_userid_seq">
+      <ObjectId>16417</ObjectId>
+      <StateNumber>543</StateNumber>
       <Owner>postgres</Owner>
       <SequenceIdentity>1..2147483647</SequenceIdentity>
       <CacheSize>1</CacheSize>
