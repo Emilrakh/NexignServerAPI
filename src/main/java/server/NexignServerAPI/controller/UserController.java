@@ -1,6 +1,7 @@
 package server.NexignServerAPI.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -97,7 +98,7 @@ public class UserController {
     }
 
     @GetMapping("/users/status/{status}/{actionDate}")
-    public List<UserEntity> findByStatusAndActionDate(@PathVariable(value = "status") String status,@PathVariable(value = "actionDate") Date actionDate) {
+    public List<UserEntity> findByStatusAndActionDate(@PathVariable(value = "status") String status,@PathVariable(value = "actionDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date actionDate) {
         return userService.findByStatusAndActionDate(status, actionDate);
     }
 }
