@@ -57,37 +57,13 @@ public class UserController {
         return ResponseEntity.ok().body(userDTO);
     }
 
-//    @GetMapping("/users/{userID}")
-//    public List<UserEntity> findByID(Iterable<Long> userID) {
-//        return userService.findByID(userID);
-//    }
-
-//    @GetMapping("/users/{userID}")
-//    public UserEntity findByID(Long userID){
-//        return userService.findByID(userID);
-//    }
-
-//    @PutMapping("/users/{userID}")
-//    public ResponseEntity<UserDTO> addNewStatusByID(@RequestBody UserDTO userDTO, @PathVariable String userID)
-//            throws ResourceNotFoundException {
-//        Long id = userDTO.getUserID();
-//        String name = userDTO.getName();
-//        String email = userDTO.getEmail();
-//        String newStatus = userDTO.getStatus();
-//        String oldStatus = userDTO.getStatus();
-//        Date actionDate = new Date();
-//        UserModel userModel = this.userService.addNewStatusByID(id, newStatus);
-//        userDTO = new UserDTO(id, name, email, userModel.getStatus(), actionDate, oldStatus);
-//        return ResponseEntity.ok().body(userDTO);
-//    }
-
     @PutMapping("/users/{userID}")
     public ResponseEntity<UserEntity> addNewStatusByID(@PathVariable(value = "userID") Long userID, @Validated @RequestBody UserEntity userDetails)
             throws ResourceNotFoundException {
         UserModel userModel = userService.getUserById(userID);
         userModel.setOldStatus(userDetails.getStatus());
         userModel.setStatus(userDetails.getStatus());
-        userModel.setActionDate(new Date());
+        userModel.setActionDate(userDetails.getActionDate());
         final UserEntity newUser = userService.addNewStatusByID(userID, userDetails);
         return ResponseEntity.ok().body(newUser);
     }
@@ -97,11 +73,16 @@ public class UserController {
         return userService.findByStatus(status);
     }
 
+<<<<<<< HEAD
+    @PostMapping("/users/statusTime/{status}")
+    public List<UserEntity> findByStatusAndActionDate(@PathVariable(value = "status") String status, Date actionDate) {
+=======
     @GetMapping("/users/status/{status}/{actionDate}")
 <<<<<<< HEAD
     public List<UserEntity> findByStatusAndActionDate(@PathVariable(value = "status") String status,@PathVariable(value = "actionDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date actionDate) {
 =======
     public List<UserEntity> findByStatusAndActionDate(@PathVariable(value = "status") String status,@PathVariable(value = "actionDate") Date actionDate) {
+>>>>>>> master
 >>>>>>> master
         return userService.findByStatusAndActionDate(status, actionDate);
     }

@@ -7,6 +7,8 @@ import server.NexignServerAPI.entities.UserEntity;
 import server.NexignServerAPI.models.UserModel;
 import server.NexignServerAPI.repository.UserRepository;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +20,12 @@ public class UserService implements IUserService{
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public String convertTime(long time){
+        Date date = new Date(time);
+        Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return format.format(date);
     }
 
     public List<UserEntity> getAllUsers(){
@@ -40,34 +48,9 @@ public class UserService implements IUserService{
         String email = userEntity.getEmail();
         String status = userEntity.getStatus();
         String oldStatus = userEntity.getOldStatus();
-        Date actionDate = userEntity.getActionDate();
-        UserModel userModel = new UserModel(id, name, email, status, actionDate, oldStatus);
+        UserModel userModel = new UserModel(id, name, email, status, oldStatus);
         return userModel;
     }
-
-//    @Override
-//    public List<UserEntity> findByID(Iterable<Long> userID) {
-//        return userRepository.findByID(userID);
-//    }
-
-//    @Override
-//    public UserEntity findByID( Long userID){
-//        return userRepository.findByID(userID);
-//    }
-
-//    public UserModel addNewStatusByID(long userID, String status) throws ResourceNotFoundException {
-//        UserEntity userEntity = userRepository.findById(userID)
-//                .orElseThrow(()-> new ResourceNotFoundException("Not user with this ID " + userID));
-//        Long id = userEntity.getUserID();
-//        String name = userEntity.getName();
-//        String email = userEntity.getEmail();
-//        Date actionDate = new Date();
-//        String oldStatus = userEntity.getStatus();
-//        String newStatus = userEntity.setStatus(status);
-//        UserEntity newUser = userRepository.save(new UserEntity(id, name, email, newStatus, actionDate, oldStatus));
-//        UserModel userModel = new UserModel(id, name, email, newStatus, actionDate, oldStatus);
-//        return userModel;
-//    }
 
     public UserEntity addNewStatusByID(Long userID, UserEntity userDetails )
             throws ResourceNotFoundException {
@@ -75,7 +58,7 @@ public class UserService implements IUserService{
                 .orElseThrow(() -> new ResourceNotFoundException("Not user with this ID " + userID));
         userEntity.setOldStatus(userEntity.getStatus());
         userEntity.setStatus(userDetails.getStatus());
-        userEntity.setActionDate(new Date());
+        userEntity.setActionDate(userDetails.getActionDate());
         final UserEntity newUser = userRepository.save(userEntity);
         return newUser;
     }
@@ -87,6 +70,6 @@ public class UserService implements IUserService{
 
     @Override
     public List<UserEntity> findByStatusAndActionDate(String status, Date actionDate) {
-        return userRepository.findByStatusAndActionDate(status, actionDate);
+        return this.userRepository.findByStatusAndActionDate(status, actionDate);
     }
 }
